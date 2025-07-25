@@ -95,7 +95,7 @@ EOF
 
 # === 3. Wait for graphical.target before quitting plymouth ===
 sudo mkdir -p /etc/systemd/system/plymouth-quit.service.d
-cat <<EOF | sudo tee /etc/systemd/system/plymouth-quit.service.d/wait-for-graphical.conf > /dev/null
+cat <<EOF | sudo tee /etc/systemd/system/plymouth-quit.service.d/wait-for-graphical.conf 
 [Unit]
 After=multi-user.target
 EOF

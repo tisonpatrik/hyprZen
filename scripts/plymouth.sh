@@ -22,7 +22,7 @@ fi
 
 # === 2. Ensure plymouth waits for graphical.target ===
 sudo mkdir -p /etc/systemd/system/plymouth-quit.service.d
-echo -e "[Unit]\nAfter=graphical.target" | sudo tee /etc/systemd/system/plymouth-quit.service.d/wait-for-graphical.conf > /dev/null
+echo -e "[Unit]\nAfter=graphical.target" | sudo tee /etc/systemd/system/plymouth-quit.service.d/wait-for-graphical.conf
 
 # === 3. Mask plymouth-quit-wait ===
 if systemctl list-unit-files | grep -q plymouth-quit-wait.service; then
