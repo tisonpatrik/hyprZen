@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 )
 
@@ -111,9 +110,6 @@ func initSudoSession() error {
 	exec.Command("sudo", "-K").Run()
 
 	cmd := exec.Command("sudo", "-v")
-	cmd.Stdin = os.Stdin   // aby prompt fungoval
-	cmd.Stdout = os.Stdout // pro výpis dotazu
-	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
 		return fmt.Errorf("failed to authenticate with sudo: %w", err)
 	}
