@@ -70,18 +70,28 @@ func installOpi() error {
 }
 
 func installCodecs() error {
-	fmt.Println("📦 Installing codecs via opi...")
+	fmt.Println("🎵 Adding Packman repository for multimedia support...")
 
-	cmd := exec.Command("bash", "-c", "opi codecs")
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-
-	fmt.Println("ℹ️  You may be prompted by opi for input — please follow instructions.")
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("failed to run opi codecs: %w", err)
+	err := runCommand(
+		"sudo", "zypper", "ar", "-cfp", "90",
+		"http://ftp.gwdg.de/pub/linux/misc/packman/suse/openSUSE_Tumbleweed/",
+		"packman",
+	)
+	if err != nil {
+		return fmt.Errorf("failed to add Packman repo: %w", err)
 	}
 
+	fmt.Println("🔄 Performing vendor switch to Packman for multimedia codecs...")
+
+	err = runCommand(
+		"sudo", "zypper", "--non-interactive",
+		"dup", "--from", "packman", "--allow-vendor-change",
+	)
+	if err != nil {
+		return fmt.Errorf("failed to perform dup from Packman: %w", err)
+	}
+
+	fmt.Println("✅ Codecs installation complete. Multimedia support should be available.")
 	return nil
 }
 
