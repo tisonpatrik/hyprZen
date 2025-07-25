@@ -7,6 +7,6 @@ if command -v go &> /dev/null; then
 fi
 
 echo "Installing go:"
-sudo zypper in git go
+sudo zypper in git go make
 
 make run

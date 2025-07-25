@@ -44,7 +44,6 @@ func updateAndUpgrade() error {
 
 	if err := runCommand(
 		"sudo", "zypper",
-		"--non-interactive",
 		"dup",
 	); err != nil {
 		return fmt.Errorf("zypper dup failed: %w", err)

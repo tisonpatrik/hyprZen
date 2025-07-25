@@ -13,15 +13,13 @@ func runCommand(name string, args ...string) error {
 	return cmd.Run()
 }
 
-func zypperInstall(pkg string) error {
-	return zypperInstallMany([]string{pkg})
-}
+
 
 func zypperInstallMany(pkgs []string) error {
 	if len(pkgs) == 0 {
 		return nil
 	}
-	args := append([]string{"zypper", "--non-interactive", "in"}, pkgs...)
+	args := append([]string{"zypper", "in"}, pkgs...)
 	if err := runCommand("sudo", args...); err != nil {
 		return fmt.Errorf("failed to install packages %v: %w", pkgs, err)
 	}
