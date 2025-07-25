@@ -14,13 +14,22 @@ func runCommand(name string, args ...string) error {
 	return cmd.Run()
 }
 
-
-
 func zypperInstallMany(pkgs []string) error {
 	if len(pkgs) == 0 {
 		return nil
 	}
 	args := append([]string{"zypper", "in"}, pkgs...)
+	if err := runCommand("sudo", args...); err != nil {
+		return fmt.Errorf("failed to install packages %v: %w", pkgs, err)
+	}
+	return nil
+}
+
+func opiInstallMany(pkgs []string) error {
+	if len(pkgs) == 0 {
+		return nil
+	}
+	args := append([]string{"opi"}, pkgs...)
 	if err := runCommand("sudo", args...); err != nil {
 		return fmt.Errorf("failed to install packages %v: %w", pkgs, err)
 	}

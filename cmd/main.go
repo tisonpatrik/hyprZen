@@ -5,7 +5,7 @@ import "hyprzen/internal"
 func main() {
 	internal.PreInstallSetup()
 	internal.InstallSystem()
-	internal.InstallTools()
+	internal.InstallAps()
 	internal.AddConfigs()
 
 }

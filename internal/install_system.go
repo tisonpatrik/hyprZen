@@ -2,32 +2,61 @@ package internal
 
 import "fmt"
 
-func InstallSystem() error {
+var (
 
+	hyprlandia = []string{
+		"hyprland-devel",
+		"hyprland-qtutils",
+		"hyprland",
+		"hyprlock",
+		"hyprshot",
+		"hypridle",
+		"hyprland-wallpapers",
+		"xdg-desktop-portal-hyprland",
+	}
+	systemTools = []string{
+		"blueman",
+		"xdg-desktop-portal-gtk",
+		"gtk4-devel",
+		"brightnessctl",
+		"playerctl",
+		"polkit-gnome",
+		"libqalculate",
+	}
+	uiTools = []string{
+		"waybar",
+		"mako",
+		"swaybg",
+	}
+	opiPackages = []string{
+		"uwsm",
+	}
+)
+
+func InstallSystem() error {
 	if err := installHyprland(); err != nil {
 		return err
 	}
-	if err := installDrivers(); err != nil {
+	if err := installTools(); err != nil {
+		return err
+	}
+	if err := opiInstallMany(opiPackages); err != nil {
 		return err
 	}
 	return nil
 }
 
 func installHyprland() error {
-
-	packages := []string{"hyprland-devel", "hyprland-qtutils", "hyprland", "hyprlock", "hyprshot", "waybar", "hyprland-wallpapers"}
-	if err := zypperInstallMany(packages); err != nil {
+	if err := zypperInstallMany(hyprlandia); err != nil {
 		return fmt.Errorf("failed to install hyprland: %w", err)
 	}
 	return nil
 }
 
-func installDrivers() error {
-	packages := []string{"blueman", "xdg-desktop-portal-hyprland", "xdg-desktop-portal-gtk"}
-	if err := zypperInstallMany(packages); err != nil {
-		return fmt.Errorf("failed to install drivers: %w", err)
+func installTools() error {
+	all := append(uiTools, systemTools...)
+	if err := zypperInstallMany(all); err != nil {
+		return fmt.Errorf("failed to install tools: %w", err)
 	}
 	return nil
 }
-
-
