@@ -1,5 +1,6 @@
 package internal
 
-func AddConfigs() {
-
+func AddConfigs() error {
+	// TODO: Implement config installation
+	return nil
 }

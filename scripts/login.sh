@@ -66,7 +66,7 @@ sudo chmod +x /usr/local/bin/seamless-login
 rm /tmp/seamless-login.c
 
 # === 2. Create systemd service ===
-cat <<EOF | sudo tee /etc/systemd/system/hyprzen-seamless-login.service > /dev/null
+cat <<EOF | sudo tee /etc/systemd/system/hyprzen-seamless-login.service
 [Unit]
 Description=hyprzen seamless auto-login
 Documentation=https://github.com/tisonpatrik/hyprzen
