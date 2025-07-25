@@ -105,10 +105,7 @@ func installCodecs() error {
 
 func initSudoSession() error {
 	fmt.Println("🔐 Asking for sudo password to initialize session...")
-
-	// Pro jistotu zrušme předchozí session (vynucení zadání hesla)
 	exec.Command("sudo", "-K").Run()
-
 	cmd := exec.Command("sudo", "-v")
 	if err := cmd.Run(); err != nil {
 		return fmt.Errorf("failed to authenticate with sudo: %w", err)
