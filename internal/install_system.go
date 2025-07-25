@@ -11,8 +11,10 @@ var (
 		"hyprlock",
 		"hyprshot",
 		"hypridle",
+		"hyprcursor",
 		"hyprland-wallpapers",
 		"xdg-desktop-portal-hyprland",
+		"hyprwayland-scanner",
 	}
 	systemTools = []string{
 		"blueman",
@@ -30,6 +32,7 @@ var (
 	}
 	opiPackages = []string{
 		"uwsm",
+		"hyprutils",
 	}
 )
 
