@@ -37,19 +37,18 @@ var (
 )
 
 func InstallSystem() error {
-	fmt.Println("Installing Hyprland...")
 	if err := installHyprland(); err != nil {
 		return err
 	}
-	fmt.Println("Installing tools...")
 	if err := installTools(); err != nil {
 		return err
 	}
-	fmt.Println("Installing OPI packages...")
 	if err := opiInstallMany(opiPackages); err != nil {
 		return err
 	}
-	fmt.Println("Running login script...")
+	if err := runPlymouthScript(); err != nil {
+		return err
+	}
 	if err := runLoginScript(); err != nil {
 		return err
 	}
@@ -74,6 +73,13 @@ func installTools() error {
 func runLoginScript() error {
 	if err := runCommand("bash", "scripts/login.sh"); err != nil {
 		return fmt.Errorf("failed to run login script: %w", err)
+	}
+	return nil
+}
+
+func runPlymouthScript() error {
+	if err := runCommand("bash", "scripts/plymouth.sh"); err != nil {
+		return fmt.Errorf("failed to run plymouth script: %w", err)
 	}
 	return nil
 }
