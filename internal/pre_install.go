@@ -2,13 +2,10 @@ package internal
 
 import (
 	"fmt"
-	"os/exec"
 )
 
 func PreInstallSetup() error {
-	if err := initSudoSession(); err != nil {
-		return err
-	}
+
 	if err := updateAndUpgrade(); err != nil {
 		return err
 	}
@@ -100,16 +97,5 @@ func installCodecs() error {
 	}
 
 	fmt.Println("✅ Codecs installation complete. Multimedia support should be available.")
-	return nil
-}
-
-func initSudoSession() error {
-	fmt.Println("🔐 Asking for sudo password to initialize session...")
-	exec.Command("sudo", "-K").Run()
-	cmd := exec.Command("sudo", "-v")
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("failed to authenticate with sudo: %w", err)
-	}
-
 	return nil
 }
