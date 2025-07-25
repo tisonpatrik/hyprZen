@@ -37,13 +37,20 @@ var (
 )
 
 func InstallSystem() error {
+	fmt.Println("Installing Hyprland...")
 	if err := installHyprland(); err != nil {
 		return err
 	}
+	fmt.Println("Installing tools...")
 	if err := installTools(); err != nil {
 		return err
 	}
+	fmt.Println("Installing OPI packages...")
 	if err := opiInstallMany(opiPackages); err != nil {
+		return err
+	}
+	fmt.Println("Running login script...")
+	if err := runLoginScript(); err != nil {
 		return err
 	}
 	return nil
@@ -60,6 +67,13 @@ func installTools() error {
 	all := append(uiTools, systemTools...)
 	if err := zypperInstallMany(all); err != nil {
 		return fmt.Errorf("failed to install tools: %w", err)
+	}
+	return nil
+}
+
+func runLoginScript() error {
+	if err := runCommand("bash", "scripts/login.sh"); err != nil {
+		return fmt.Errorf("failed to run login script: %w", err)
 	}
 	return nil
 }
