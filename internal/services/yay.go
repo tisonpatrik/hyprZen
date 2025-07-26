@@ -8,6 +8,19 @@ import (
 func InstallYay() error {
 	log.Println("InstallYay: Starting installation...")
 	
+	// First, ensure git is available
+	log.Println("InstallYay: Checking for git...")
+	if err := runCommandString("git --version"); err != nil {
+		log.Println("InstallYay: Git not found, installing git...")
+		if err := pacmanInstall("git"); err != nil {
+			log.Printf("InstallYay: Failed to install git: %v", err)
+			return fmt.Errorf("failed to install git: %w", err)
+		}
+		log.Println("InstallYay: Git installed successfully")
+	} else {
+		log.Println("InstallYay: Git is already available")
+	}
+	
 	if err := pacmanInstall("base-devel"); err != nil {
 		log.Printf("InstallYay: Failed to install base-devel: %v", err)
 		return fmt.Errorf("failed to install base-devel: %w", err)
@@ -26,15 +39,27 @@ func InstallYay() error {
 	
 	// Clone yay-bin in /tmp
 	log.Println("InstallYay: Cloning yay-bin...")
-	if err := runCommandString("cd /tmp && git clone https://aur.archlinux.org/yay-bin.git"); err != nil {
+	// First remove any existing directory
+	if err := runCommandString("rm -rf /tmp/yay-bin"); err != nil {
+		log.Printf("InstallYay: Failed to clean existing directory: %v", err)
+	}
+	
+	// Clone using git command directly
+	if err := runCommand("git", "clone", "https://aur.archlinux.org/yay-bin.git", "/tmp/yay-bin"); err != nil {
 		log.Printf("InstallYay: Failed to clone yay-bin: %v", err)
+		// Let's also check if git is available
+		if gitErr := runCommandString("git --version"); gitErr != nil {
+			log.Printf("InstallYay: Git is not available: %v", gitErr)
+			return fmt.Errorf("git is not available: %w", gitErr)
+		}
 		return fmt.Errorf("failed to clone yay-bin: %w", err)
 	}
 	log.Println("InstallYay: yay-bin cloned successfully")
 
 	// Build and install yay
 	log.Println("InstallYay: Building and installing yay...")
-	if err := runCommandString(fmt.Sprintf("cd %s && makepkg -si --noconfirm", tempDir)); err != nil {
+	// Change to the temp directory and run makepkg
+	if err := runCommand("sh", "-c", fmt.Sprintf("cd %s && makepkg -si --noconfirm", tempDir)); err != nil {
 		log.Printf("InstallYay: Failed to build and install yay: %v", err)
 		return fmt.Errorf("failed to build and install yay: %w", err)
 	}
