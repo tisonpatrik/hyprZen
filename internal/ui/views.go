@@ -33,8 +33,8 @@ func ChoicesView(m Model) string {
 
 	choices := fmt.Sprintf(
 		"%s\n%s",
-		Checkbox("Install HyprZen", c == 0),
-		Checkbox("Exit", c == 1),
+		Checkbox("Install HyprZen", c == MenuInstall),
+		Checkbox("Exit", c == MenuExit),
 	)
 
 	return fmt.Sprintf(tpl, choices)

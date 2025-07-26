@@ -9,6 +9,27 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+// MenuChoice represents the available menu options
+type MenuChoice int
+
+const (
+	MenuInstall MenuChoice = iota
+	MenuExit
+	MenuChoiceCount // This will be 2, representing the total number of menu choices
+)
+
+// String returns the string representation of the menu choice
+func (m MenuChoice) String() string {
+	switch m {
+	case MenuInstall:
+		return "Install HyprZen"
+	case MenuExit:
+		return "Exit"
+	default:
+		return "Unknown"
+	}
+}
+
 // Message types for the application
 type (
 	TickMsg       struct{}
@@ -23,7 +44,7 @@ type (
 
 // Model represents the application state
 type Model struct {
-	Choice       int
+	Choice       MenuChoice
 	Chosen       bool
 	Ticks        int
 	Quitting     bool

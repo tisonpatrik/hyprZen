@@ -29,7 +29,7 @@ func NewApp() App {
 
 	return App{
 		Model: Model{
-			Choice:       0,
+			Choice:       MenuInstall,
 			Chosen:       false,
 			Ticks:        0,
 			Quitting:     false,

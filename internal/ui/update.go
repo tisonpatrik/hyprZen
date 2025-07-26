@@ -33,18 +33,17 @@ func UpdateChoices(msg tea.Msg, m Model) (Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "j", "down":
-			m.Choice++
-			if m.Choice > 1 {
-				m.Choice = 1
+			if m.Choice == MenuInstall {
+				m.Choice = MenuExit
 			}
 		case "k", "up":
-			m.Choice--
-			if m.Choice < 0 {
-				m.Choice = 0
+			if m.Choice == MenuExit {
+				m.Choice = MenuInstall
 			}
 		case "enter":
 			m.Chosen = true
-			if m.Choice == 0 {
+			switch m.Choice {
+			case MenuInstall:
 				// Install option selected - start installation
 				m.Installing = true
 				installer := services.NewInstallerService()
@@ -55,7 +54,7 @@ func UpdateChoices(msg tea.Msg, m Model) (Model, tea.Cmd) {
 					ExecuteStep(m.Steps[m.StepIndex]),
 					m.Spinner.Tick,
 				)
-			} else {
+			case MenuExit:
 				// Exit option selected
 				m.Quitting = true
 				return m, tea.Quit
