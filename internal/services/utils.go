@@ -2,16 +2,13 @@ package services
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 	"strings"
 )
 
 func runCommand(name string, args ...string) error {
 	cmd := exec.Command(name, args...)
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	// Don't use os.Stdin/Stdout/Stderr in TUI - let the command run independently
 	return cmd.Run()
 }
 
@@ -23,9 +20,7 @@ func runCommandString(command string) error {
 	}
 	
 	cmd := exec.Command(parts[0], parts[1:]...)
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	// Don't use os.Stdin/Stdout/Stderr in TUI - let the command run independently
 	return cmd.Run()
 }
 
