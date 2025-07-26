@@ -1,52 +1,18 @@
 package ui
 
 import (
-	"hyprzen/internal/services"
-
-	"github.com/charmbracelet/bubbles/progress"
-	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 )
 
 // App represents the main application model
 type App struct {
-	Model
+	*ModalModel
 }
 
 // NewApp creates a new application instance
 func NewApp() App {
-	// Initialize spinner
-	s := spinner.New()
-	s.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("63"))
-
-	// Initialize progress bar
-	p := progress.New(
-		progress.WithDefaultGradient(),
-		progress.WithWidth(40),
-		progress.WithoutPercentage(),
-	)
-
 	return App{
-		Model: Model{
-			Choice:       MenuInstall,
-			Chosen:       false,
-			Ticks:        0,
-			Quitting:     false,
-			Installing:   false,
-			InstallError: nil,
-			InstallLogs:  []string{},
-			Steps:        []services.InstallStep{},
-			StepIndex:    0,
-			PkgIndex:     0,
-			Width:        0,
-			Height:       0,
-			Spinner:      s,
-			Progress:     p,
-			Done:         false,
-			RetryCount:   0,
-			MaxRetries:   3,
-		},
+		ModalModel: NewModalModel(),
 	}
 }
 
@@ -57,12 +23,14 @@ func (a App) Init() tea.Cmd {
 
 // Update handles application updates
 func (a App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	model, cmd := Update(msg, a.Model)
-	a.Model = model
+	model, cmd := a.ModalModel.Update(msg)
+	if modalModel, ok := model.(*ModalModel); ok {
+		a.ModalModel = modalModel
+	}
 	return a, cmd
 }
 
 // View renders the application
 func (a App) View() string {
-	return MainView(a.Model)
+	return a.ModalModel.View()
 }
