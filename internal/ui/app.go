@@ -1,6 +1,8 @@
 package ui
 
 import (
+	"hyprzen/internal/services"
+
 	"github.com/charmbracelet/bubbles/progress"
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
@@ -34,8 +36,9 @@ func NewApp() App {
 			Installing:   false,
 			InstallError: nil,
 			InstallLogs:  []string{},
-			Packages:     []string{},
-			Index:        0,
+			Steps:        []services.InstallStep{},
+			StepIndex:    0,
+			PkgIndex:     0,
 			Width:        0,
 			Height:       0,
 			Spinner:      s,

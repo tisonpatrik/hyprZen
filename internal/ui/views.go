@@ -50,7 +50,7 @@ func ChosenView(m Model) string {
 	if m.InstallError != nil {
 		msg = fmt.Sprintf("Installation failed: %s", m.InstallError.Error())
 	} else if m.Done {
-		msg = fmt.Sprintf("Done! Installed %d packages.\n", len(m.Packages))
+		msg = fmt.Sprintf("Done! Completed %d installation steps.\n", len(m.Steps))
 	} else {
 		msg = "Installation completed successfully!"
 	}
@@ -62,24 +62,24 @@ func ChosenView(m Model) string {
 	return msg
 }
 
-// PackageManagerView renders the package manager interface
+// PackageManagerView renders the installation progress interface
 func PackageManagerView(m Model) string {
-	n := len(m.Packages)
+	n := len(m.Steps)
 	w := lipgloss.Width(fmt.Sprintf("%d", n))
 
-	pkgCount := fmt.Sprintf(" %*d/%*d", w, m.Index, w, n)
+	stepCount := fmt.Sprintf(" %*d/%*d", w, m.StepIndex, w, n)
 
 	spin := m.Spinner.View() + " "
 	prog := m.Progress.View()
-	cellsAvail := max(0, m.Width-lipgloss.Width(spin+prog+pkgCount))
+	cellsAvail := max(0, m.Width-lipgloss.Width(spin+prog+stepCount))
 
-	pkgName := KeywordStyle.Render(m.Packages[m.Index])
-	info := lipgloss.NewStyle().MaxWidth(cellsAvail).Render("Installing " + pkgName)
+	stepName := KeywordStyle.Render(m.Steps[m.StepIndex].Name)
+	info := lipgloss.NewStyle().MaxWidth(cellsAvail).Render("Executing " + stepName)
 
-	cellsRemaining := max(0, m.Width-lipgloss.Width(spin+info+prog+pkgCount))
+	cellsRemaining := max(0, m.Width-lipgloss.Width(spin+info+prog+stepCount))
 	gap := strings.Repeat(" ", cellsRemaining)
 
-	return spin + info + gap + prog + pkgCount
+	return spin + info + gap + prog + stepCount
 }
 
 // Checkbox renders a checkbox option

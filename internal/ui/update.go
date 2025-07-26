@@ -45,14 +45,14 @@ func UpdateChoices(msg tea.Msg, m Model) (Model, tea.Cmd) {
 		case "enter":
 			m.Chosen = true
 			if m.Choice == 0 {
-				// Install option selected - start package manager
+				// Install option selected - start installation
 				m.Installing = true
 				installer := services.NewInstallerService()
-				m.Packages = installer.GetPackages()
+				m.Steps = installer.Install()
 
-				// Start the package installation process
+				// Start the installation process
 				return m, tea.Batch(
-					DownloadAndInstall(m.Packages[m.Index]),
+					ExecuteStep(m.Steps[m.StepIndex]),
 					m.Spinner.Tick,
 				)
 			} else {
@@ -72,25 +72,25 @@ func UpdateChosen(msg tea.Msg, m Model) (Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.Width, m.Height = msg.Width, msg.Height
 
-	case InstalledPkgMsg:
-		pkg := m.Packages[m.Index]
-		if m.Index >= len(m.Packages)-1 {
+	case StepCompleteMsg:
+		step := m.Steps[m.StepIndex]
+		if m.StepIndex >= len(m.Steps)-1 {
 			// Everything's been installed. We're done!
 			m.Done = true
 			return m, tea.Sequence(
-				tea.Printf("✓ %s", pkg), // print the last success message
-				tea.Quit,                // exit the program
+				tea.Printf("✓ %s", step.Name), // print the last success message
+				tea.Quit,                      // exit the program
 			)
 		}
 
 		// Update progress bar
-		m.Index++
-		progressCmd := m.Progress.SetPercent(float64(m.Index) / float64(len(m.Packages)))
+		m.StepIndex++
+		progressCmd := m.Progress.SetPercent(float64(m.StepIndex) / float64(len(m.Steps)))
 
 		return m, tea.Batch(
 			progressCmd,
-			tea.Printf("✓ %s", pkg),                 // print success message above our program
-			DownloadAndInstall(m.Packages[m.Index]), // download the next package
+			tea.Printf("✓ %s", step.Name),           // print success message above our program
+			ExecuteStep(m.Steps[m.StepIndex]),       // execute the next step
 		)
 
 	case spinner.TickMsg:
@@ -130,11 +130,16 @@ func UpdateChosen(msg tea.Msg, m Model) (Model, tea.Cmd) {
 	return m, nil
 }
 
-// DownloadAndInstall creates a command that simulates package installation
-func DownloadAndInstall(pkg string) tea.Cmd {
+// ExecuteStep creates a command that executes an installation step
+func ExecuteStep(step services.InstallStep) tea.Cmd {
 	return func() tea.Msg {
-		// Simulate installation time
-		time.Sleep(time.Millisecond * 500)
-		return InstalledPkgMsg(pkg)
+		// Execute the step action
+		if err := step.Action(); err != nil {
+			// Handle error - for now just return the step name
+			return StepCompleteMsg(step.Name)
+		}
+		// Simulate some processing time
+		time.Sleep(time.Millisecond * 1000)
+		return StepCompleteMsg(step.Name)
 	}
 }

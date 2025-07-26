@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"hyprzen/internal/services"
 	"time"
 
 	"github.com/charmbracelet/bubbles/progress"
@@ -17,7 +18,7 @@ type (
 	InstallCompleteMsg struct {
 		Error error
 	}
-	InstalledPkgMsg string
+	StepCompleteMsg string
 )
 
 // Model represents the application state
@@ -30,14 +31,15 @@ type Model struct {
 	InstallError error
 	InstallLogs  []string
 
-	// Package manager state
-	Packages []string
-	Index    int
-	Width    int
-	Height   int
-	Spinner  spinner.Model
-	Progress progress.Model
-	Done     bool
+	// Installation state
+	Steps   []services.InstallStep
+	StepIndex int
+	PkgIndex  int
+	Width     int
+	Height    int
+	Spinner   spinner.Model
+	Progress  progress.Model
+	Done      bool
 }
 
 // Commands
