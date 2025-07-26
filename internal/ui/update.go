@@ -2,6 +2,7 @@ package ui
 
 import (
 	"hyprzen/internal/services"
+	"log"
 
 	"github.com/charmbracelet/bubbles/progress"
 	"github.com/charmbracelet/bubbles/spinner"
@@ -132,11 +133,14 @@ func UpdateChosen(msg tea.Msg, m Model) (Model, tea.Cmd) {
 // ExecuteStep creates a command that executes an installation step
 func ExecuteStep(step services.InstallStep) tea.Cmd {
 	return func() tea.Msg {
+		log.Printf("ExecuteStep: Starting step: %s", step.Name)
 		// Execute the step action
 		if err := step.Action(); err != nil {
+			log.Printf("ExecuteStep: Step failed: %v", err)
 			// Return an error message
 			return InstallCompleteMsg{Error: err}
 		}
+		log.Printf("ExecuteStep: Step completed successfully: %s", step.Name)
 		// Return success message
 		return StepCompleteMsg(step.Name)
 	}
