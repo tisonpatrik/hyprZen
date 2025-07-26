@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
 
-sudo zypper in git go make
+make build
 
-make run
+./build/main

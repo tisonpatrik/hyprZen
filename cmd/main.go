@@ -1,12 +1,16 @@
 package main
 
 import (
-	"hyprzen/internal"
+	"fmt"
+	"hyprzen/internal/ui"
+
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 func main() {
-	internal.PreInstallSetup()
-	internal.InstallSystem()
-	internal.InstallAps()
-	internal.AddConfigs()
+	app := ui.NewApp()
+	p := tea.NewProgram(app)
+	if _, err := p.Run(); err != nil {
+		fmt.Println("could not start program:", err)
+	}
 }
