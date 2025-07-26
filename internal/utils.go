@@ -29,7 +29,7 @@ func opiInstallMany(pkgs []string) error {
 	if len(pkgs) == 0 {
 		return nil
 	}
-	
+
 	for _, pkg := range pkgs {
 		if err := runCommand("sudo", "opi", pkg); err != nil {
 			return fmt.Errorf("failed to install package %s: %w", pkg, err)

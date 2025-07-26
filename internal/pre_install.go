@@ -9,7 +9,7 @@ func PreInstallSetup() error {
 	if err := updateAndUpgrade(); err != nil {
 		return err
 	}
-	if err := installDevelPattern(); err != nil{
+	if err := installDevelPattern(); err != nil {
 		return err
 	}
 	if err := setupFlatpak(); err != nil {
@@ -26,10 +26,10 @@ func PreInstallSetup() error {
 }
 
 func installDevelPattern() error {
-        if err := runCommand("sudo", "zypper", "install", "-t", "pattern", "devel_basis"); err != nil {
-                return fmt.Errorf("devel_basis pattern install failed: %w", err)
-        }
-        return nil
+	if err := runCommand("sudo", "zypper", "install", "-t", "pattern", "devel_basis"); err != nil {
+		return fmt.Errorf("devel_basis pattern install failed: %w", err)
+	}
+	return nil
 }
 
 func updateAndUpgrade() error {

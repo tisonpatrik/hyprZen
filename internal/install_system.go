@@ -3,7 +3,6 @@ package internal
 import "fmt"
 
 var (
-
 	hyprlandia = []string{
 		"hyprland-devel",
 		"hyprland-qtutils",

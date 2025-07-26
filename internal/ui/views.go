@@ -2,8 +2,9 @@ package ui
 
 import (
 	"fmt"
-	"math"
 	"strings"
+
+	"github.com/charmbracelet/lipgloss"
 )
 
 // MainView renders the main application view
@@ -39,17 +40,46 @@ func ChoicesView(m Model) string {
 	return fmt.Sprintf(tpl, choices)
 }
 
-// ChosenView renders the installation progress view
+// ChosenView renders the installation status view
 func ChosenView(m Model) string {
-	msg := "Installing HyprZen...\n\n"
-	msg += "Setting up your system with HyprZen configuration..."
-
-	label := "Preparing installation..."
-	if m.Loaded {
-		label = fmt.Sprintf("Installation completed! Exiting in %s seconds...", TicksStyle.Render(fmt.Sprintf("%d", m.Ticks)))
+	if m.Installing && !m.Done {
+		return PackageManagerView(m)
 	}
 
-	return msg + "\n\n" + label + "\n" + ProgressBar(m.Progress) + "%"
+	var msg string
+	if m.InstallError != nil {
+		msg = fmt.Sprintf("Installation failed: %s", m.InstallError.Error())
+	} else if m.Done {
+		msg = fmt.Sprintf("Done! Installed %d packages.\n", len(m.Packages))
+	} else {
+		msg = "Installation completed successfully!"
+	}
+
+	if m.Ticks > 0 {
+		msg += fmt.Sprintf("\n\nExiting in %s seconds...", TicksStyle.Render(fmt.Sprintf("%d", m.Ticks)))
+	}
+
+	return msg
+}
+
+// PackageManagerView renders the package manager interface
+func PackageManagerView(m Model) string {
+	n := len(m.Packages)
+	w := lipgloss.Width(fmt.Sprintf("%d", n))
+
+	pkgCount := fmt.Sprintf(" %*d/%*d", w, m.Index, w, n)
+
+	spin := m.Spinner.View() + " "
+	prog := m.Progress.View()
+	cellsAvail := max(0, m.Width-lipgloss.Width(spin+prog+pkgCount))
+
+	pkgName := KeywordStyle.Render(m.Packages[m.Index])
+	info := lipgloss.NewStyle().MaxWidth(cellsAvail).Render("Installing " + pkgName)
+
+	cellsRemaining := max(0, m.Width-lipgloss.Width(spin+info+prog+pkgCount))
+	gap := strings.Repeat(" ", cellsRemaining)
+
+	return spin + info + gap + prog + pkgCount
 }
 
 // Checkbox renders a checkbox option
@@ -60,18 +90,10 @@ func Checkbox(label string, checked bool) string {
 	return fmt.Sprintf("[ ] %s", label)
 }
 
-// ProgressBar renders a progress bar
-func ProgressBar(percent float64) string {
-	w := float64(ProgressBarWidth)
-
-	fullSize := int(percent * w)
-	var fullCells string
-	for i := 0; i < fullSize; i++ {
-		fullCells += KeywordStyle.Render(ProgressFullChar)
+// max returns the maximum of two integers
+func max(a, b int) int {
+	if a > b {
+		return a
 	}
-
-	emptySize := int(w) - fullSize
-	emptyCells := strings.Repeat(ProgressEmpty, emptySize)
-
-	return fmt.Sprintf("%s%s %3.0f", fullCells, emptyCells, math.Round(percent*100))
+	return b
 } 
