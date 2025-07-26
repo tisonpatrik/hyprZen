@@ -2,7 +2,6 @@ package ui
 
 import (
 	"hyprzen/internal/services"
-	"time"
 
 	"github.com/charmbracelet/bubbles/progress"
 	"github.com/charmbracelet/bubbles/spinner"
@@ -135,11 +134,10 @@ func ExecuteStep(step services.InstallStep) tea.Cmd {
 	return func() tea.Msg {
 		// Execute the step action
 		if err := step.Action(); err != nil {
-			// Return an error message instead of ignoring it
+			// Return an error message
 			return InstallCompleteMsg{Error: err}
 		}
-		// Simulate some processing time
-		time.Sleep(time.Millisecond * 1000)
+		// Return success message
 		return StepCompleteMsg(step.Name)
 	}
 }
