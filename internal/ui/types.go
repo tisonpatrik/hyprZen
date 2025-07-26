@@ -40,6 +40,10 @@ type Model struct {
 	Spinner   spinner.Model
 	Progress  progress.Model
 	Done      bool
+	
+	// Retry state
+	RetryCount int
+	MaxRetries int
 }
 
 // Commands

@@ -30,9 +30,9 @@ type InstallStep struct {
 func (i *InstallerService) Install() []InstallStep {
 	steps := []InstallStep{
 		{
-			Name: "Installing yay package manager",
+			Name: "Running fake installation test",
 			Action: func() error {
-				return InstallYay()
+				return InstallFake()
 			},
 		},
 	}

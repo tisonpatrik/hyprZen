@@ -44,6 +44,8 @@ func NewApp() App {
 			Spinner:      s,
 			Progress:     p,
 			Done:         false,
+			RetryCount:   0,
+			MaxRetries:   3,
 		},
 	}
 }

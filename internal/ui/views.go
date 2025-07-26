@@ -48,7 +48,11 @@ func ChosenView(m Model) string {
 
 	var msg string
 	if m.InstallError != nil {
-		msg = fmt.Sprintf("Installation failed: %s", m.InstallError.Error())
+		if m.RetryCount > 0 {
+			msg = fmt.Sprintf("Installation failed: %s\nRetry attempt: %d/%d", m.InstallError.Error(), m.RetryCount, m.MaxRetries)
+		} else {
+			msg = fmt.Sprintf("Installation failed: %s", m.InstallError.Error())
+		}
 	} else if m.Done {
 		msg = fmt.Sprintf("Done! Completed %d installation steps.\n", len(m.Steps))
 	} else {
@@ -71,10 +75,17 @@ func PackageManagerView(m Model) string {
 
 	spin := m.Spinner.View() + " "
 	prog := m.Progress.View()
-	cellsAvail := max(0, m.Width-lipgloss.Width(spin+prog+stepCount))
+	
+	// Add retry info if applicable
+	retryInfo := ""
+	if m.RetryCount > 0 {
+		retryInfo = fmt.Sprintf(" (retry %d/%d)", m.RetryCount, m.MaxRetries)
+	}
+	
+	cellsAvail := max(0, m.Width-lipgloss.Width(spin+prog+stepCount+retryInfo))
 
 	stepName := KeywordStyle.Render(m.Steps[m.StepIndex].Name)
-	info := lipgloss.NewStyle().MaxWidth(cellsAvail).Render("Executing " + stepName)
+	info := lipgloss.NewStyle().MaxWidth(cellsAvail).Render("Executing " + stepName + retryInfo)
 
 	cellsRemaining := max(0, m.Width-lipgloss.Width(spin+info+prog+stepCount))
 	gap := strings.Repeat(" ", cellsRemaining)

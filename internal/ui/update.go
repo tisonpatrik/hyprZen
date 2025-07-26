@@ -74,6 +74,11 @@ func UpdateChosen(msg tea.Msg, m Model) (Model, tea.Cmd) {
 
 	case StepCompleteMsg:
 		step := m.Steps[m.StepIndex]
+		
+		// Reset retry count on success
+		m.RetryCount = 0
+		m.InstallError = nil
+		
 		if m.StepIndex >= len(m.Steps)-1 {
 			// Everything's been installed. We're done!
 			m.Done = true
@@ -111,10 +116,25 @@ func UpdateChosen(msg tea.Msg, m Model) (Model, tea.Cmd) {
 		return m, nil
 
 	case InstallCompleteMsg:
-		// Installation completed
+		// Installation completed with error
 		m.InstallError = msg.Error
-		m.Ticks = 3
-		return m, Tick()
+		
+		// Check if we should retry
+		if m.RetryCount < m.MaxRetries {
+			m.RetryCount++
+			// Retry the current step
+			return m, tea.Batch(
+				tea.Printf("⚠️  %s failed, retrying (%d/%d)...", m.Steps[m.StepIndex].Name, m.RetryCount, m.MaxRetries),
+				ExecuteStep(m.Steps[m.StepIndex]),
+			)
+		} else {
+			// Max retries exceeded, show error and exit
+			m.Ticks = 3
+			return m, tea.Batch(
+				tea.Printf("❌ %s failed after %d retries: %s", m.Steps[m.StepIndex].Name, m.MaxRetries, msg.Error),
+				Tick(),
+			)
+		}
 
 	case TickMsg:
 		if m.Ticks > 0 {
