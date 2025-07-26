@@ -49,7 +49,7 @@ func UpdateChoices(msg tea.Msg, m Model) (Model, tea.Cmd) {
 				m.Installing = true
 				installer := services.NewInstallerService()
 				m.Packages = installer.GetPackages()
-				
+
 				// Start the package installation process
 				return m, tea.Batch(
 					DownloadAndInstall(m.Packages[m.Index]),
@@ -71,7 +71,7 @@ func UpdateChosen(msg tea.Msg, m Model) (Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		m.Width, m.Height = msg.Width, msg.Height
-		
+
 	case InstalledPkgMsg:
 		pkg := m.Packages[m.Index]
 		if m.Index >= len(m.Packages)-1 {
@@ -89,15 +89,15 @@ func UpdateChosen(msg tea.Msg, m Model) (Model, tea.Cmd) {
 
 		return m, tea.Batch(
 			progressCmd,
-			tea.Printf("✓ %s", pkg),                    // print success message above our program
-			DownloadAndInstall(m.Packages[m.Index]),    // download the next package
+			tea.Printf("✓ %s", pkg),                 // print success message above our program
+			DownloadAndInstall(m.Packages[m.Index]), // download the next package
 		)
-		
+
 	case spinner.TickMsg:
 		var cmd tea.Cmd
 		m.Spinner, cmd = m.Spinner.Update(msg)
 		return m, cmd
-		
+
 	case progress.FrameMsg:
 		newModel, cmd := m.Progress.Update(msg)
 		if newModel, ok := newModel.(progress.Model); ok {
@@ -137,4 +137,4 @@ func DownloadAndInstall(pkg string) tea.Cmd {
 		time.Sleep(time.Millisecond * 500)
 		return InstalledPkgMsg(pkg)
 	}
-} 
+}

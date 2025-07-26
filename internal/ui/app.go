@@ -17,30 +17,30 @@ func NewApp() App {
 	// Initialize spinner
 	s := spinner.New()
 	s.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("63"))
-	
+
 	// Initialize progress bar
 	p := progress.New(
 		progress.WithDefaultGradient(),
 		progress.WithWidth(40),
 		progress.WithoutPercentage(),
 	)
-	
+
 	return App{
 		Model: Model{
-			Choice:      0,
-			Chosen:      false,
-			Ticks:       0,
-			Quitting:    false,
-			Installing:  false,
+			Choice:       0,
+			Chosen:       false,
+			Ticks:        0,
+			Quitting:     false,
+			Installing:   false,
 			InstallError: nil,
 			InstallLogs:  []string{},
-			Packages:    []string{},
-			Index:       0,
-			Width:       0,
-			Height:      0,
-			Spinner:     s,
-			Progress:    p,
-			Done:        false,
+			Packages:     []string{},
+			Index:        0,
+			Width:        0,
+			Height:       0,
+			Spinner:      s,
+			Progress:     p,
+			Done:         false,
 		},
 	}
 }
@@ -60,4 +60,4 @@ func (a App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // View renders the application
 func (a App) View() string {
 	return MainView(a.Model)
-} 
+}

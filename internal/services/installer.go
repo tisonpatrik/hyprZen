@@ -29,17 +29,17 @@ func NewInstallerServiceWithError() *InstallerService {
 func (i *InstallerService) Install() error {
 	// Simulate installation steps with delays
 	time.Sleep(2 * time.Second) // PreInstallSetup
-	
+
 	time.Sleep(3 * time.Second) // InstallSystem
-	
+
 	// Simulate error if requested
 	if i.simulateError {
 		return fmt.Errorf("network connection error during system installation")
 	}
-	
+
 	time.Sleep(2 * time.Second) // InstallAps
 	time.Sleep(1 * time.Second) // AddConfigs
-	
+
 	return nil
 }
 
@@ -89,7 +89,6 @@ func (i *InstallerService) GetPackages() []string {
 	for k := range pkgs {
 		pkgs[k] += fmt.Sprintf("-%d.%d.%d", rand.Intn(10), rand.Intn(10), rand.Intn(10))
 	}
-	
+
 	return pkgs
 }
-

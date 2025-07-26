@@ -10,7 +10,7 @@ import (
 
 // Message types for the application
 type (
-	TickMsg struct{}
+	TickMsg       struct{}
 	InstallLogMsg struct {
 		Message string
 	}
@@ -22,22 +22,22 @@ type (
 
 // Model represents the application state
 type Model struct {
-	Choice      int
-	Chosen      bool
-	Ticks       int
-	Quitting    bool
-	Installing  bool
+	Choice       int
+	Chosen       bool
+	Ticks        int
+	Quitting     bool
+	Installing   bool
 	InstallError error
 	InstallLogs  []string
-	
+
 	// Package manager state
-	Packages    []string
-	Index       int
-	Width       int
-	Height      int
-	Spinner     spinner.Model
-	Progress    progress.Model
-	Done        bool
+	Packages []string
+	Index    int
+	Width    int
+	Height   int
+	Spinner  spinner.Model
+	Progress progress.Model
+	Done     bool
 }
 
 // Commands
@@ -52,4 +52,4 @@ func LogInstallation(message string) tea.Cmd {
 	return func() tea.Msg {
 		return InstallLogMsg{Message: message}
 	}
-} 
+}
