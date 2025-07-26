@@ -135,8 +135,8 @@ func ExecuteStep(step services.InstallStep) tea.Cmd {
 	return func() tea.Msg {
 		// Execute the step action
 		if err := step.Action(); err != nil {
-			// Handle error - for now just return the step name
-			return StepCompleteMsg(step.Name)
+			// Return an error message instead of ignoring it
+			return InstallCompleteMsg{Error: err}
 		}
 		// Simulate some processing time
 		time.Sleep(time.Millisecond * 1000)
