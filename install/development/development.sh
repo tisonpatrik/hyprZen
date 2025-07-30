@@ -1,8 +1,6 @@
 #!/bin/bash
 
 yay -S --noconfirm --needed \
-  cargo clang llvm mise \
+  clang go uv \
   imagemagick \
-  mariadb-libs postgresql-libs \
-  github-cli \
   lazygit lazydocker-bin
