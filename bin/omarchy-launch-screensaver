@@ -9,15 +9,23 @@ focused=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true).name')
 for m in $(hyprctl monitors -j | jq -r '.[] | .name'); do
   hyprctl dispatch focusmonitor $m
   hyprctl dispatch exec -- \
-    alacritty --class Screensaver --title Screensaver \
+    alacritty --class Screensaver \
     -o 'colors.primary.background="#000000"' \
     -o 'colors.cursor.cursor="#000000"' \
+<<<<<<< HEAD
+=======
+    -o 'font.size=18' \
+    -o 'window.opacity=1' \
+>>>>>>> 008ede7 (Tweaks)
     -e ~/.local/share/omarchy/bin/omarchy-cmd-screensaver
 done
 
 hyprctl dispatch focusmonitor $focused
+<<<<<<< HEAD
 =======
 pgrep -f "alacritty --class Screensaver" ||
   alacritty --class Screensaver --title Screensaver -o 'colors.primary.background="#000000"' \
     -o 'colors.cursor.cursor="#000000"' -o 'font.size=18' -e ~/.local/share/omarchy/bin/omarchy-cmd-screensaver
 >>>>>>> 1fda1ad (Increase screensaver font size for looks and performance)
+=======
+>>>>>>> 008ede7 (Tweaks)
