@@ -65,9 +65,7 @@ source $OMARCHY_INSTALL/desktop/printer.sh
 # Apps
 show_logo expand
 show_subtext "Installing default applications [4/5]"
-source $OMARCHY_INSTALL/apps/webapps.sh
 source $OMARCHY_INSTALL/apps/xtras.sh
-source $OMARCHY_INSTALL/apps/mimetypes.sh
 
 # Updates
 show_logo highlight
@@ -75,7 +73,7 @@ show_subtext "Updating system packages [5/5]"
 sudo updatedb
 sudo pacman -Syu --noconfirm
 
-# Reboot
+# Reboot- v
 show_logo laseretch 920
 show_subtext "You're done! So we'll be rebooting now..."
 sleep 2
