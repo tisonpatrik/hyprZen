@@ -1,5 +1,6 @@
 #!/bin/bash
 
+<<<<<<< HEAD
 # exit early if screensave is already running
 pgrep -f "alacritty --class Screensaver" && exit 0
 
@@ -15,3 +16,8 @@ for m in $(hyprctl monitors -j | jq -r '.[] | .name'); do
 done
 
 hyprctl dispatch focusmonitor $focused
+=======
+pgrep -f "alacritty --class Screensaver" ||
+  alacritty --class Screensaver --title Screensaver -o 'colors.primary.background="#000000"' \
+    -o 'colors.cursor.cursor="#000000"' -o 'font.size=18' -e ~/.local/share/omarchy/bin/omarchy-cmd-screensaver
+>>>>>>> 1fda1ad (Increase screensaver font size for looks and performance)
